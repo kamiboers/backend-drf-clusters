@@ -36,6 +36,19 @@ def test_create_cluster_via_api(api_client, create_user):
 
 
 @pytest.mark.django_db
+def test_invalid_create_cluster_parameters_fail_with_message(api_client, create_user):
+  user = create_user
+  cpus, memory = 1200, 3400
+  params = {'creator': user.uri(), 'cpus': cpus, 'memory': memory}
+  response = api_client.post('/clusters/', params, format='json')
+  error_messages = str(response.json())
+
+  assert response.status_code == 400
+  assert 'CPU value must be between 1-16' in error_messages
+  assert 'Memory value must be between 1-128' in error_messages
+
+
+@pytest.mark.django_db
 def test_fetch_cluster_by_id(api_client, create_cluster):
   cluster = create_cluster()
   user = cluster.creator
