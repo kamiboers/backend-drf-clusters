@@ -12,6 +12,7 @@ def cluster_list(request):
     List all clusters belonging to a user, or create a cluster.
     """
     if request.method == 'GET':
+        # import pdb; pdb.set_trace()
         clusters = Cluster.objects.filter(creator__id=request.user.id).all()
         serializer = ClusterSerializer(clusters, many=True)
         return Response(serializer.data)

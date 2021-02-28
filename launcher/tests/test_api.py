@@ -3,6 +3,7 @@ import pytest
 from rest_framework.test import force_authenticate
 from rest_framework.test import APIRequestFactory
 
+from .conftest import create_user_model
 from launcher.views import cluster_detail, cluster_list
 
 
@@ -49,6 +50,20 @@ def test_fetch_all_clusters_via_api(api_client, create_cluster):
     assert user_cluster['creator'] == cluster.creator.id
     assert user_cluster['cpus'] == cluster.cpus
     assert user_cluster['memory'] == cluster.memory
+
+
+
+@pytest.mark.django_db
+def test_index_displays_only_user_clusters(api_client, create_user, create_cluster):
+    user = create_user
+    user2 = create_user_model(username='other_user')
+    cluster = create_cluster(creator=user)
+    cluster2 = create_cluster(creator=user2)
+    status_code, cluster_response = _get_all_user_clusters(user2)
+
+    assert status_code == 200
+    assert len(cluster_response) == 1
+    assert cluster_response[0]['creator'] == user2.id
 
 
 @pytest.mark.django_db
