@@ -1,22 +1,29 @@
 import pytest
 
 from django.test import Client
+from rest_framework.test import force_authenticate
+from rest_framework.test import APIRequestFactory
 
 from launcher.models import Cluster, User
+from launcher.views import cluster_detail, cluster_list
 
-def _test_user_uri(user):
-    return f'http://testserver/users/{user.id}/'
+factory = APIRequestFactory()
 
+# TODO: clean up request/auth functionality
+# TODO: test non authenticated calls
+# TODO: institute token authentication
 
 @pytest.mark.django_db
 def test_fetch_all_clusters_via_api(api_client, create_cluster):
     cluster = create_cluster()
-    response = api_client.get('/clusters/', format='json')
-    clusters = response.json()['results']
+    request = factory.get('/clusters/', format='json')
+    force_authenticate(request, user=cluster.creator)
+    response = cluster_list(request)
+    clusters = response.data
 
     assert response.status_code == 200
     assert len(clusters) == 1
-    assert clusters[0]['creator'] == _test_user_uri(cluster.creator)
+    assert clusters[0]['creator'] == cluster.creator.id
     assert clusters[0]['cpus'] == cluster.cpus
     assert clusters[0]['memory'] == cluster.memory
 
@@ -25,14 +32,16 @@ def test_fetch_all_clusters_via_api(api_client, create_cluster):
 def test_create_cluster_via_api(api_client, create_user):
     user = create_user
     cpus, memory = 12, 34
-    params = {'creator': user.uri(), 'cpus': cpus, 'memory': memory}
-    response = api_client.post('/clusters/', params, format='json')
-    result = response.data
+    params = {'creator': user.id, 'cpus': cpus, 'memory': memory}
+    request = factory.post('/clusters/', params, format='json')
+    force_authenticate(request, user=user)
+    response = cluster_list(request)
+    created = response.data
 
     assert response.status_code == 201
-    assert result['cpus'] == cpus
-    assert result['creator'] == _test_user_uri(user)
-    assert result['memory'] == memory
+    assert created['cpus'] == cpus
+    assert created['creator'] == user.id
+    assert created['memory'] == memory
 
 
 @pytest.mark.django_db
@@ -40,8 +49,10 @@ def test_invalid_create_cluster_parameters_fail_with_message(api_client, create_
     user = create_user
     cpus, memory = 1200, 3400
     params = {'creator': user.uri(), 'cpus': cpus, 'memory': memory}
-    response = api_client.post('/clusters/', params, format='json')
-    error_messages = str(response.json())
+    request = factory.post('/clusters/', params, format='json')
+    force_authenticate(request, user=user)
+    response = cluster_list(request)
+    error_messages = str(response.data)
 
     assert response.status_code == 400
     assert 'CPU value must be between 1-16' in error_messages
@@ -52,13 +63,15 @@ def test_invalid_create_cluster_parameters_fail_with_message(api_client, create_
 def test_fetch_cluster_by_id(api_client, create_cluster):
     cluster = create_cluster()
     user = cluster.creator
-    response = api_client.get(f'/clusters/{cluster.id}/', format='json')
+    request = factory.get(f'/clusters/{cluster.id}/', format='json')
+    force_authenticate(request, user=cluster.creator)
+    response = cluster_detail(request, cluster.id)
 
     assert response.status_code == 200
     assert response.data == {
       'id': cluster.id,
       'cpus': cluster.cpus,
-      'creator': _test_user_uri(user),
+      'creator': user.id,
       'memory': cluster.memory
     }
 
