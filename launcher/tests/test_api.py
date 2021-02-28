@@ -3,20 +3,20 @@ import pytest
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from .conftest import create_client
 from launcher.models import Cluster, User
 
-# client = create_client()
 
 @pytest.mark.django_db
-def test_fetch_all_clusters_via_api(create_user, create_cluster):
+def test_fetch_all_clusters_via_api(api_client, create_user, create_cluster):
   user = create_user
-  cluster = create_cluster(user)
-  import pdb; pdb.set_trace()
-  assert cluster.memory
+  cluster = create_cluster(creator=user)
 
-  # response = client.get('/clusters/', format='json')
+  response = api_client.get('/clusters/', format='json')
+  clusters = response.json()['results']
 
-  # assert response.status_code == 200
-  # assert len(response.json()) == 1
+  assert response.status_code == 200
+  assert len(clusters) == 1
+  assert clusters[0]['creator'] == f'http://testserver/users/{user.id}/'
+  assert clusters[0]['cpus'] == cluster.cpus
+  assert clusters[0]['memory'] == cluster.memory
 

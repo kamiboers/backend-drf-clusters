@@ -23,18 +23,22 @@ def create_user(username=random_string()):
   user.delete()
 
 
-@pytest.fixture
-def create_cluster():
-  def _create_cluster(user, cpus=1, memory=1):
-    cluster = create_cluster_model(user, cpus, memory)
-    yield cluster
+@pytest.fixture(scope='function')
+def create_cluster(**kwargs):
+  def _create_cluster(**kwargs):
+    cluster = Cluster(cpus=1, memory=1, **kwargs)
+    cluster.save()
 
+    return cluster
+
+    # TODO: yield, delete in factory model?
     cluster.delete()
-  
+
   return _create_cluster
+  
 
-
-def create_client():
+@pytest.fixture()
+def api_client():
   return APIClient()
 
 
@@ -50,5 +54,5 @@ def create_cluster_model(user=None, cpus=1, memory=1):
 
   cluster = Cluster(creator=user, cpus=cpus, memory=memory)
   cluster.save()
-  
+
   return cluster
