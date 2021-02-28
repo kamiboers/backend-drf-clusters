@@ -1,18 +1,14 @@
-import os
-import django
 import pytest
-import random
-import string
+
 from rest_framework.test import APIClient
 
-from clusters.settings import BASE_DIR
-
+from .utils import random_string
 from launcher.models import Cluster, User
+  
 
-
-def random_string(length=15):
-  letters = string.ascii_lowercase
-  return ''.join(random.choice(letters) for i in range(length))
+@pytest.fixture(scope='function')
+def api_client():
+    return APIClient()
 
 
 @pytest.fixture
@@ -23,7 +19,6 @@ def create_user(username=random_string()):
   user.delete()
 
 
-# TODO: yield, delete in factory fixture?
 @pytest.fixture(scope='function')
 def create_cluster(**kwargs):
     def _create_cluster(**kwargs):
@@ -31,11 +26,7 @@ def create_cluster(**kwargs):
         return cluster
 
     return _create_cluster
-  
 
-@pytest.fixture(scope='function')
-def api_client():
-    return APIClient()
 
 
 def create_user_model(username=random_string()):

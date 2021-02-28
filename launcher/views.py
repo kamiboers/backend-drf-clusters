@@ -1,31 +1,9 @@
-from rest_framework import permissions, viewsets
-from rest_framework.request import Request
-
-from .models import Cluster, User
-from .serializers import ClusterSerializer, UserSerializer
-
-# class ClusterViewSet(viewsets.ModelViewSet):
-#   """
-#   API endpoint that allows clusters to be created or edited.
-#   """
-#   queryset = Cluster.objects.all()
-#   serializer_class = ClusterSerializer
-#   permission_classes = [permissions.IsAuthenticated]
-
-
-
-# class UserViewSet(viewsets.ModelViewSet):
-#   """
-#   API endpoint that displays existing Users
-#   """
-#   queryset = User.objects.all()
-#   serializer_class = UserSerializer
-  # permission_classes = [permissions.IsAuthenticated]
-
-
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+from .models import Cluster
+from .serializers import ClusterSerializer
 
 
 @api_view(['GET', 'POST'])

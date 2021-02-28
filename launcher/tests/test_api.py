@@ -48,7 +48,7 @@ def test_create_cluster_via_api(api_client, create_user):
 def test_invalid_create_cluster_parameters_fail_with_message(api_client, create_user):
     user = create_user
     cpus, memory = 1200, 3400
-    params = {'creator': user.uri(), 'cpus': cpus, 'memory': memory}
+    params = {'creator': user.id, 'cpus': cpus, 'memory': memory}
     request = factory.post('/clusters/', params, format='json')
     force_authenticate(request, user=user)
     response = cluster_list(request)
