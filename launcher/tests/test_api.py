@@ -56,18 +56,16 @@ def test_fetch_all_clusters_via_api(api_client, create_cluster):
     assert user_cluster['memory'] == cluster.memory
 
 
-
 @pytest.mark.django_db
 def test_index_displays_only_user_clusters(api_client, create_user, create_cluster):
-    user = create_user
-    user2 = create_user_model(username='other_user')
-    cluster = create_cluster(creator=user)
-    cluster2 = create_cluster(creator=user2)
-    status_code, cluster_response = _get_all_user_clusters(user2)
+    other_user = create_user_model(username='other_user')
+    create_cluster(creator=create_user)
+    create_cluster(creator=other_user)
+    status_code, cluster_response = _get_all_user_clusters(other_user)
 
     assert status_code == 200
     assert len(cluster_response) == 1
-    assert cluster_response[0]['creator'] == user2.id
+    assert cluster_response[0]['creator'] == other_user.id
 
 
 @pytest.mark.django_db
@@ -122,9 +120,7 @@ def test_fetch_cluster_by_id(api_client, create_cluster):
 @pytest.mark.django_db
 def test_fetch_cluster_by_id_404_when_wrong_user(api_client, create_cluster):
     cluster = create_cluster()
-    user = cluster.creator
-    user2 = create_user_model(username='other_user')
-    response = _get_user_cluster_by_pk(user2, cluster.pk)
+    other_user = create_user_model(username='other_user')
+    response = _get_user_cluster_by_pk(other_user, cluster.pk)
 
     assert response.status_code == 404
-
