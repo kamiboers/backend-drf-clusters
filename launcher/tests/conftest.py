@@ -23,16 +23,12 @@ def create_user(username=random_string()):
   user.delete()
 
 
+# TODO: yield, delete in factory fixture?
 @pytest.fixture(scope='function')
 def create_cluster(**kwargs):
   def _create_cluster(**kwargs):
-    cluster = Cluster(cpus=1, memory=1, **kwargs)
-    cluster.save()
-
+    cluster = create_cluster_model(cpus=1, memory=1, **kwargs)
     return cluster
-
-    # TODO: yield, delete in factory model?
-    cluster.delete()
 
   return _create_cluster
   
