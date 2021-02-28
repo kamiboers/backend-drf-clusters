@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 def _validate_cpus(value):
     if not 1 <= value <= 16:
         raise ValidationError(f'CPU value must be between 1-16. Invalid value: {value}')
-    
+
 
 def _validate_memory(value):
     if not 1 <= value <= 128:

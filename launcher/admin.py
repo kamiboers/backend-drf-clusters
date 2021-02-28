@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Cluster, User
+from .models import User
+from clusters.models import Cluster
 
 
 admin.site.register(Cluster)

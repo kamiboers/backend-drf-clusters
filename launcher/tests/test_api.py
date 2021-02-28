@@ -1,18 +1,17 @@
 import pytest
 
-from django.test import Client
 from rest_framework.test import force_authenticate
 from rest_framework.test import APIRequestFactory
 
-from launcher.models import Cluster, User
 from launcher.views import cluster_detail, cluster_list
 
+
+# TODO: test non authenticated calls
+# TODO: institute token authentication
 
 
 factory = APIRequestFactory()
 
-# TODO: test non authenticated calls
-# TODO: institute token authentication
 
 def _get_all_user_clusters(user):
     request = factory.get('/clusters/', format='json')
@@ -37,7 +36,6 @@ def _get_user_cluster_by_pk(user, cluster_pk):
     request = factory.get(f'/clusters/{cluster_pk}/', format='json')
     force_authenticate(request, user=user)
     return cluster_detail(request, cluster_pk)
-
 
 
 @pytest.mark.django_db
@@ -90,4 +88,3 @@ def test_fetch_cluster_by_id(api_client, create_cluster):
       'creator': user.id,
       'memory': cluster.memory
     }
-

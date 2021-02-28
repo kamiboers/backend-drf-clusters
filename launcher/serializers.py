@@ -1,11 +1,14 @@
 from rest_framework import serializers
 
-from .models import Cluster, User
+from clusters.models import Cluster
+from .models import User
+
 
 class ClusterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cluster
         fields = ['id', 'cpus', 'creator', 'memory']
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
