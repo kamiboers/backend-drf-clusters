@@ -12,7 +12,7 @@ factory = APIRequestFactory()
 
 def _get_all_user_clusters(user):
     request = factory.get('/clusters/', format='json')
-    force_authenticate(request, user=user)
+    force_authenticate(request, user=user)  # force authentication to test api rather than auth
     response = cluster_list(request)
     clusters = response.data
 

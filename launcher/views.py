@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+
 from clusters.models import Cluster
 from .serializers import ClusterSerializer
 
@@ -41,7 +42,3 @@ def cluster_detail(request, pk):
 
     serializer = ClusterSerializer(cluster)
     return Response(serializer.data)
-
-@api_view(['POST'])
-def authenticate(request, username, password):
-    return Response({}, status=status.HTTP_200_OK)

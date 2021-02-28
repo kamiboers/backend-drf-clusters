@@ -36,7 +36,7 @@ def create_user_model(username=None):
     if not username:
         username = random_string()
 
-    user = User(username=username)
+    user = User(username=username, password='password')
     user.save()
     return user
 
