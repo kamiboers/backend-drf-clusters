@@ -35,3 +35,7 @@ def cluster_detail(request, pk):
 
     serializer = ClusterSerializer(cluster)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def login(request, username, password):
+    return Response({}, status=status.HTTP_200_OK)
