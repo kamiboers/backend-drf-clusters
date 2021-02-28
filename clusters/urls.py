@@ -12,6 +12,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', include(router.urls)),
     path('clusters/', views.cluster_list),
+    path('clusters/<int:pk>/', views.cluster_detail),
     # path('auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
 ]
