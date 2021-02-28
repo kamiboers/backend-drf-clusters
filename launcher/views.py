@@ -7,6 +7,6 @@ class ClusterViewSet(viewsets.ModelViewSet):
   """
   API endpoint that allows clusters to be created or edited.
   """
-  queryset = Cluster.objects.all().order_by('-created_at')
+  queryset = Cluster.objects.all()
   serializer_class = ClusterSerializer
   # permission_classes = permissions.isAuthenticated
