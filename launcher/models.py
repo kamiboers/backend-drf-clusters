@@ -3,7 +3,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
-    pass
+    def uri(self):
+        return f'http://127.0.0.1:8000/users/{self.id}/'
 
 
 class Cluster(models.Model):
