@@ -7,6 +7,7 @@ from launcher import views
 
 router = routers.DefaultRouter()
 router.register(r'clusters', views.ClusterViewSet)
+router.register(r'users', views.UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
