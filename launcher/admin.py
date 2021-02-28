@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import User
+from clusters.models import Cluster
+
+
+admin.site.register(Cluster)
+admin.site.register(User)
