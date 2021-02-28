@@ -3,11 +3,11 @@ from rest_framework import serializers
 from .models import Cluster, User
 
 class ClusterSerializer(serializers.HyperlinkedModelSerializer):
-  class Meta:
-    model = Cluster
-    fields = ['id', 'cpus', 'creator', 'memory']
+    class Meta:
+        model = Cluster
+        fields = ['id', 'cpus', 'creator', 'memory']
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-  class Meta:
-    model = User
-    fields = ['id', 'username']
+    class Meta:
+        model = User
+        fields = ['id', 'username']

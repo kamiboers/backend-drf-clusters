@@ -12,6 +12,7 @@ def _validate_memory(value):
     if not 1 <= value <= 128:
         raise ValidationError(f'Memory value must be between 1-128 GiB. Invalid value: {value}')
 
+
 class Cluster(models.Model):
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
