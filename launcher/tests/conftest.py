@@ -23,12 +23,15 @@ def create_user(username=random_string()):
   user.delete()
 
 
-# @pytest.fixture
-# def create_cluster(user=None, cpus=1, memory=1):
-#   cluster = create_cluster_model(user, cpus, memory)
-#   yield cluster
+@pytest.fixture
+def create_cluster():
+  def _create_cluster(user, cpus=1, memory=1):
+    cluster = create_cluster_model(user, cpus, memory)
+    yield cluster
 
-#   cluster.delete()
+    cluster.delete()
+  
+  return _create_cluster
 
 
 def create_client():
@@ -41,7 +44,11 @@ def create_user_model(username=random_string()):
   return user
 
 
-# def create_cluster_model(user=create_user_model(), cpus=1, memory=1):
-#   cluster = Cluster(creator=user, cpus=cpus, memory=memory)
-#   cluster.save()
-#   return cluster
+def create_cluster_model(user=None, cpus=1, memory=1):
+  if user is None:
+    user = create_user_model()
+
+  cluster = Cluster(creator=user, cpus=cpus, memory=memory)
+  cluster.save()
+  
+  return cluster

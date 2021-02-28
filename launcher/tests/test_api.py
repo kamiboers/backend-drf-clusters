@@ -10,10 +10,10 @@ from launcher.models import Cluster, User
 
 @pytest.mark.django_db
 def test_fetch_all_clusters_via_api(create_user, create_cluster):
-  # import pdb; pdb.set_trace()
-  # user = create_user
-  cluster = create_cluster(create_user)
-  assert True
+  user = create_user
+  cluster = create_cluster(user)
+  import pdb; pdb.set_trace()
+  assert cluster.memory
 
   # response = client.get('/clusters/', format='json')
 
