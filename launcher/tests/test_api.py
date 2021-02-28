@@ -28,8 +28,25 @@ def test_create_cluster_via_api(api_client, create_user):
   cpus, memory = 12, 34
   params = {'creator': user.uri(), 'cpus': cpus, 'memory': memory}
   response = api_client.post('/clusters/', params, format='json')
-  result = response.json()
+  result = response.data
 
   assert response.status_code == 201
-  assert response.data == {'cpus': cpus, 'creator': _test_user_uri(user), 'memory': memory}
+  assert result['cpus'] == cpus
+  assert result['creator'] == _test_user_uri(user)
+  assert result['memory'] == memory
+
+
+@pytest.mark.django_db
+def test_fetch_cluster_by_id(api_client, create_cluster):
+  cluster = create_cluster()
+  user = cluster.creator
+  response = api_client.get(f'/clusters/{cluster.id}/', format='json')
+
+  assert response.status_code == 200
+  assert response.data == {
+    'id': cluster.id,
+    'cpus': cluster.cpus,
+    'creator': _test_user_uri(user),
+    'memory': cluster.memory
+  }
 

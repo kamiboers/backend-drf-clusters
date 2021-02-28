@@ -33,7 +33,7 @@ def create_cluster(**kwargs):
   return _create_cluster
   
 
-@pytest.fixture()
+@pytest.fixture(scope='function')
 def api_client():
   return APIClient()
 

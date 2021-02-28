@@ -5,7 +5,7 @@ from .models import Cluster, User
 class ClusterSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = Cluster
-    fields = ['cpus', 'creator', 'memory']
+    fields = ['id', 'cpus', 'creator', 'memory']
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
