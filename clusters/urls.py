@@ -11,6 +11,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('clusters/', views.cluster_list),
     path('clusters/<int:pk>/', views.cluster_detail),
-    # TODO: add auth endpoint(s)
+    path('auth/', views.authenticate),
     path('admin/', admin.site.urls),
 ]

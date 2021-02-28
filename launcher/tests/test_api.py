@@ -7,9 +7,6 @@ from .conftest import create_user_model
 from launcher.views import cluster_detail, cluster_list
 
 
-# TODO: institute token authentication
-
-
 factory = APIRequestFactory()
 
 

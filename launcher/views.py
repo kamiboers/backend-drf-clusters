@@ -1,5 +1,7 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from clusters.models import Cluster
@@ -7,6 +9,8 @@ from .serializers import ClusterSerializer
 
 
 @api_view(['GET', 'POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def cluster_list(request):
     """
     List all clusters belonging to a user, or create a cluster.
@@ -24,6 +28,8 @@ def cluster_list(request):
 
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def cluster_detail(request, pk):
     """
     Return details of a cluster retrieved by pk.
@@ -37,5 +43,5 @@ def cluster_detail(request, pk):
     return Response(serializer.data)
 
 @api_view(['POST'])
-def login(request, username, password):
+def authenticate(request, username, password):
     return Response({}, status=status.HTTP_200_OK)
