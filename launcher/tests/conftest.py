@@ -13,7 +13,10 @@ def api_client():
 
 
 @pytest.fixture
-def create_user(username=random_string()):
+def create_user(username=None):
+    if not username:
+        username = random_string()
+
     user = create_user_model(username)
     yield user
 
@@ -23,23 +26,26 @@ def create_user(username=random_string()):
 @pytest.fixture(scope='function')
 def create_cluster(**kwargs):
     def _create_cluster(**kwargs):
-        cluster = create_cluster_model(cpus=1, memory=1, **kwargs)
+        cluster = create_cluster_model(creator=kwargs.get('creator'), cpus=1, memory=1)
         return cluster
 
     return _create_cluster
 
 
-def create_user_model(username=random_string()):
-    user = User(username=username)
+def create_user_model(username=None):
+    if not username:
+        username = random_string()
+
+    user = User(username=username, password='password')
     user.save()
     return user
 
 
-def create_cluster_model(user=None, cpus=1, memory=1):
-    if user is None:
-        user = create_user_model()
+def create_cluster_model(creator=None, cpus=1, memory=1):
+    if creator is None:
+        creator = create_user_model()
 
-    cluster = Cluster(creator=user, cpus=cpus, memory=memory)
+    cluster = Cluster(creator=creator, cpus=cpus, memory=memory)
     cluster.save()
 
     return cluster
