@@ -12,6 +12,7 @@ Django = ">=3.1,<3.2"
 PyYAML = "~=5.3.1"
 pytest-django = "*"
 flake8 = "*"
+djoser = "*"
 
 [requires]
 python_version = "3.8"
